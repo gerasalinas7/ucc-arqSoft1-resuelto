@@ -1,5 +1,8 @@
 go run main.go
 
+Usuario disponible por defecto:
+admin / admin
+
 Registrar usuario:
 curl -X POST http://localhost:8080/register -H "Content-Type: application/json" -d '{"username": "user1", "password": "password123"}'
 

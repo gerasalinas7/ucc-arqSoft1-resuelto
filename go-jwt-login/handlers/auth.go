@@ -18,6 +18,15 @@ type ErrorResponse struct {
 	Message string `json:"message"`
 }
 
+func init() {
+	hashedPassword, err := utils.HashPassword("admin")
+	if err != nil {
+		panic(err)
+	}
+
+	users["admin"] = hashedPassword
+}
+
 // Registro de usuario
 func Register(c *gin.Context) {
 	var user struct {
