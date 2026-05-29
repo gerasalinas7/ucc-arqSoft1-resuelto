@@ -1,0 +1,55 @@
+version: '3.8'
+
+services:
+  # Servicio para la API en Go
+  api:
+    build:
+      context: ./go-examples/gorm
+    container_name: go-api
+    ports:
+      - "8080:80"  # Exponemos el puerto 80 que es el puerto interno en el código Go
+    environment:
+      - DB_HOST=mysql
+      - DB_PORT=3306
+      - DB_USER=root
+      - DB_PASSWORD=root
+      - DB_NAME=db_vinilos
+    depends_on:
+      - mysql
+    networks:
+      - app-network
+
+  # Servicio para el Frontend en React
+  frontend:
+    build:
+      context: ./frontend
+    container_name: react-frontend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - api
+    networks:
+      - app-network
+
+  # Servicio para la base de datos MySQL
+  mysql:
+    image: mysql:5.7
+    container_name: mysql-db
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: db_vinilos
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+    networks:
+      - app-network
+
+# Volúmenes para persistir los datos de MySQL
+volumes:
+  mysql-data:
+
+# Redes para comunicación entre contenedores
+networks:
+  app-network:
+    driver: bridge
